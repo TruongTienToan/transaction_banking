@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <th:block th:replace="/layout/head :: head"/>
+
+</head>
+
+<body>
+
+<!-- Begin page -->
+<div id="wrapper">
+
+
+  <!-- Topbar Start -->
+  <th:block th:replace="/layout/topbar :: topbar"/>
+  <!-- end Topbar -->
+
+
+  <!-- ========== Left Sidebar Start ========== -->
+  <th:block th:replace="/layout/leftbar :: leftbar"/>
+  <!-- Left Sidebar End -->
+
+  <!-- ============================================================== -->
+  <!-- Start Page Content here -->
+  <!-- ============================================================== -->
+
+<!--  <div class="content-page">-->
+
+<!--    <div class="col-lg-6">-->
+<!--      <div class="card">-->
+<!--        <div class="card-body">-->
+<!--          <h4 class="header-title mb-4">Table head options</h4>-->
+
+<!--          <div class="table-responsive">-->
+<!--            <table class="table mb-0">-->
+<!--              <thead class="thead-light">-->
+<!--              <tr>-->
+<!--                <th>#</th>-->
+<!--                <th>Full name</th>-->
+<!--                <th>Email</th>-->
+<!--                <th>Phone</th>-->
+<!--                <th>Balance</th>-->
+<!--                <th>Address</th>-->
+<!--                <th colspan="5">Action</th>-->
+<!--              </tr>-->
+<!--              </thead>-->
+<!--              <tbody>-->
+<!--              <th:block th:each="item : ${customers}">-->
+<!--                <tr>-->
+<!--                  <td th:text="${item.id}"></td>-->
+<!--                  <td th:text="${item.fullName}"></td>-->
+<!--                  <td th:text="${item.email}"></td>-->
+<!--                  <td th:text="${item.phone}"></td>-->
+<!--                  <td th:text="${item.balance}"></td>-->
+<!--                  <td th:text="${item.address}"></td>-->
+<!--                  <td>-->
+<!--                    <a th:href="@{/customers/update/__${item.id}__}">-->
+<!--                      <button class="btn btn-outline-secondary" title="Edit">-->
+<!--                        &lt;!&ndash;                <i class="far fa-edit"></i>&ndash;&gt;Edit-->
+<!--                      </button>-->
+<!--                    </a>-->
+<!--                  </td>-->
+<!--                  <td>-->
+
+<!--                    </button>-->
+<!--                    <a th:href="@{/customers/deposit/__${item.id}__}">-->
+<!--                      <button class="btn btn-outline-success" title="Deposit">-->
+<!--                        &lt;!&ndash;                <i class="fas fa-plus"></i>&ndash;&gt;Deposit-->
+<!--                      </button>-->
+<!--                    </a>-->
+<!--                  </td>-->
+<!--                  <td>-->
+
+<!--                    </button>-->
+<!--                    <a th:href="@{/customers/withdraw/__${item.id}__}">-->
+<!--                      <button class="btn btn-outline-success" title="Withdraw">-->
+<!--                        &lt;!&ndash;                <i class="fas fa-minus"></i>&ndash;&gt;Withdraw-->
+<!--                      </button>-->
+<!--                    </a>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <a th:href="@{/customers/transfer/__${item.id}__}">-->
+<!--                      <button class="btn btn-outline-primary" title="Transfer">-->
+<!--                        &lt;!&ndash;                <i class="fas fa-exchange-alt"></i>&ndash;&gt;Transfer-->
+<!--                      </button>-->
+<!--                    </a>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <a th:href="@{/customers/delete/__${item.id}__}">-->
+<!--                      <button class="btn btn-outline-primary" title="Delete">-->
+<!--                        &lt;!&ndash;                <i class="fa fa-trash"></i>&ndash;&gt;Delete-->
+<!--                      </button>-->
+<!--                    </a>-->
+<!--                  </td>-->
+<!--                </tr>-->
+<!--              </th:block>-->
+<!--              </tbody>-->
+<!--            </table>-->
+<!--          </div>-->
+
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+
+<!--    &lt;!&ndash; end content &ndash;&gt;-->
+
+
+
+
+
+
+
+<!--    &lt;!&ndash; Footer Start &ndash;&gt;-->
+<!--    <th:block th:replace="/layout/footer :: footer"/>-->
+<!--    &lt;!&ndash; end Footer &ndash;&gt;-->
+
+<!--  </div>-->
+
+  <!-- ============================================================== -->
+  <!-- End Page content -->
+  <!-- ============================================================== -->
+
+</div>
+<!-- END wrapper -->
+
+
+<!-- Right Sidebar -->
+    <th:block th:replace="/layout/footer :: footer"/>
+<!-- /Right-bar -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<a href="javascript:void(0);" class="right-bar-toggle demos-show-btn">
+  <i class="mdi mdi-settings-outline mdi-spin"></i> &nbsp;Choose Demos
+</a>
+
+<!-- Vendor js -->
+<script src="assets\js\vendor.min.js"></script>
+
+<!-- App js -->
+<script src="assets\js\app.min.js"></script>
+
+</body>
+
+</html>
