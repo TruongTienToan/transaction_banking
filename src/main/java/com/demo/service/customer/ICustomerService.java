@@ -2,6 +2,7 @@ package com.demo.service.customer;
 
 import com.demo.model.Customer;
 import com.demo.model.Deposit;
+import com.demo.model.Transfer;
 import com.demo.service.IGeneralService;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public interface ICustomerService extends IGeneralService<Customer> {
     List<Customer> findAllByIdNotAndDeleteIsFalse(Long id);
     void incrementBalance(Long customerId, BigDecimal transactionAmount);
     Deposit deposit(Deposit deposit);
+    Transfer transfer(Transfer transfer);
     Customer save(Customer customer);
     Customer delete(Customer customer);
 }

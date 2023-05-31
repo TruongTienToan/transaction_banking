@@ -2,7 +2,9 @@ package com.demo.service.customer;
 
 import com.demo.model.Customer;
 import com.demo.model.Deposit;
+import com.demo.model.Transfer;
 import com.demo.model.Withdraw;
+import com.demo.repository.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demo.repository.CustomerRepository;
@@ -21,7 +23,8 @@ public class CustomerServiceImpl implements ICustomerService {
     private CustomerRepository customerRepository;
 
 
-
+    @Autowired
+    private TransferRepository transferRepository;
 
     @Override
     public List<Customer> findAll() {
@@ -87,6 +90,24 @@ public class CustomerServiceImpl implements ICustomerService {
         deposit.setCustomer(customer);
 
         return deposit;
+    }
+
+    @Override
+    public Transfer transfer(Transfer transfer) {
+
+        BigDecimal transferAmount = transfer.getTransferAmount();
+        BigDecimal transactionAmount = transfer.getTransactionAmount();
+
+        customerRepository.decrementBalance(transfer.getSender().getId(), transactionAmount);
+
+        customerRepository.incrementBalance(transfer.getRecipient().getId(), transferAmount);
+
+        transferRepository.save(transfer);
+
+        Customer sender = customerRepository.findById(transfer.getSender().getId()).get();
+        transfer.setSender(sender);
+
+        return transfer;
     }
 
     @Override

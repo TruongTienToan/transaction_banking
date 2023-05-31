@@ -2,7 +2,9 @@ package com.demo.controller;
 
 import com.demo.model.Customer;
 import com.demo.model.Deposit;
+import com.demo.model.Transfer;
 import com.demo.model.Withdraw;
+import com.demo.service.transfer.ITransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +28,8 @@ public class CustomerController {
     //    @Autowired
 //    private IWithdrawService withdrawService;
     //
-//    @Autowired
-//    private ITransferService transferService;
+    @Autowired
+    private ITransferService transferService;
 
 
     @GetMapping
@@ -104,6 +106,28 @@ public class CustomerController {
         }
 
         return "/customers/withdraw";
+    }
+
+    @GetMapping("/transfer/{senderId}")
+    public String showTransferPage(@PathVariable Long senderId, Model model) {
+
+        Optional<Customer> senderOptional = customerService.findById(senderId);
+
+        if (!senderOptional.isPresent()) {
+            model.addAttribute("error", true);
+            model.addAttribute("messages", "Sender not found");
+        }
+        else {
+            Customer sender = senderOptional.get();
+
+            Transfer transfer = new Transfer();
+            transfer.setSender(sender);
+            model.addAttribute("transfer", transfer);
+            List<Customer> recipients =customerService.findAllByIdNotAndDeleteIsFalse(senderId);
+            model.addAttribute("recipients", recipients);
+        }
+
+        return "/customers/transfer";
     }
 
 
@@ -206,6 +230,87 @@ public class CustomerController {
         model.addAttribute("messages", "Withdraw successful");
 
         return "/customers/withdraw";
+    }
+
+    @PostMapping("/transfer/{senderId}")
+    public String doTransfer(@PathVariable Long senderId, @Validated @ModelAttribute Transfer transfer, BindingResult bindingResult, Model model) {
+
+
+        new Transfer().validate(transfer, bindingResult);
+
+        Optional<Customer> senderOptional = customerService.findById(senderId);
+        List<Customer> recipients = customerService.findAllByIdNotAndDeleteIsFalse(senderId);
+
+        model.addAttribute("recipients", recipients);
+        model.addAttribute("transfer", transfer);
+
+        if (bindingResult.hasFieldErrors()) {
+            model.addAttribute("error", true);
+
+            return "/customers/transfer";
+        }
+
+        if (!senderOptional.isPresent()) {
+            model.addAttribute("error", true);
+            model.addAttribute("messages", "Sender not valid");
+
+            return "/customers/transfer";
+        }
+
+        Long recipientId = transfer.getRecipient().getId();
+
+        Optional<Customer> recipientOptional = customerService.findById(recipientId);
+
+        if (!recipientOptional.isPresent()) {
+            model.addAttribute("error", true);
+            model.addAttribute("messages", "Recipient not valid");
+
+            return "/customers/transfer";
+        }
+
+        if (senderId.equals(recipientId)) {
+            model.addAttribute("error", true);
+            model.addAttribute("messages", "Sender ID must be different from Recipient ID");
+
+            return "/customers/transfer";
+        }
+
+        BigDecimal senderCurrentBalance = senderOptional.get().getBalance();
+
+        BigDecimal transferAmountStr = transfer.getTransferAmount();
+
+        BigDecimal transferAmount = BigDecimal.valueOf(Long.parseLong(String.valueOf(transferAmountStr)));
+        long fees = 10L;
+        BigDecimal feesAmount = transferAmount.multiply(BigDecimal.valueOf(fees)).divide(BigDecimal.valueOf(100));
+        BigDecimal transactionAmount = transferAmount.add(feesAmount);
+
+        if (senderCurrentBalance.compareTo(transactionAmount) < 0) {
+            model.addAttribute("error", true);
+            model.addAttribute("messages", "Sender balance not enough to transfer");
+
+            return "/customers/transfer";
+        }
+
+//        Transfer transfer = new Transfer();
+        transfer.setSender(senderOptional.get());
+        transfer.setRecipient(recipientOptional.get());
+        transfer.setTransferAmount(transferAmount);
+        transfer.setFees(fees);
+        transfer.setFeesAmount(feesAmount);
+        transfer.setTransactionAmount(transactionAmount);
+
+        customerService.transfer(transfer);
+
+        transfer.setSender(transfer.getSender());
+        transfer.setTransferAmount(transferAmount);
+        transfer.setTransactionAmount(transferAmount);
+
+        model.addAttribute("transferDTO", transfer);
+
+        model.addAttribute("success", true);
+        model.addAttribute("messages", "Transfer success");
+
+        return "/customers/transfer";
     }
 
 
